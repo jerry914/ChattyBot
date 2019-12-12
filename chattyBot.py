@@ -10,7 +10,7 @@
 # then just type after the > prompt
 # to leave, type > I'm leaving
 
-
+from googletrans import Translator
 from cleverwrap import CleverWrap
 chatBot = CleverWrap("CC6zkRgO9TPlPcz6AO_zLCunNBg")
 import subprocess
@@ -21,18 +21,23 @@ shell = True
 
 def speak(this):
     print('- '+str(this))
-    # subprocess.run(['flite', '-voice', 'file://cmu_us_aew.flitevox', '-t', str(this)])
+    subprocess.run(['say', str(this)])
 
 speak('I\'m listening')
-var = input('> ')
+var_CH = input('> ')
+translator = Translator()
+var_EN=translator.translate(var_CH, src='zh-tw',dest='en')
 
 chatting = True
 while chatting == True:
-        if(var == 'I\'m leaving'):
+        if(var_EN == 'I\'m leaving'):
             chatting = False
             break
-        reply = chatBot.say(str(var))
-        speak(reply)
+        
+        reply = chatBot.say(str(var_EN.text))
+        # print('var_EN=',var_EN.text,'var_CH',var_CH)
+        
+        speak(translator.translate(reply, src='en',dest='zh-tw').text)
         var = input('> ')
 
 speak("Fine, leave. See if I care.")
